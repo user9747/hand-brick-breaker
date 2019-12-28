@@ -1,16 +1,36 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Brick Breaker Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div id="updatenote" class="updatenote mt10"> loading model ..</div>
+  <button id="trackbutton" class="bx--btn bx--btn--secondary mt10 trackbutton" type="button" disabled>
+    Toggle Video Control ..
+  </button>
+  </div>
+  <video class="videobox canvasbox" autoplay="autoplay" id="myvideo"></video>
+  <canvas id="canvas" class="border canvasbox"></canvas>
+  <div class="pauseoverlay">
+    <div class="overlaycenter">
+      Loading Handtrack.js Model ..
+    </div>
+  </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script>
+  <script src='https://cdn.jsdelivr.net/npm/handtrackjs@latest/dist/handtrack.min.js'></script>
   <script src="Paddle.js"></script>
   <script src="Ball.js"></script>
   <script src="Brick.js"></script>
+  <script src="hand.js"></script>
   <script src="brick-breaker.js"></script>
-</head>
-<body>
 </body>
+
 </html>

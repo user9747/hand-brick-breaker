@@ -3,16 +3,25 @@ let paddle
 let ball
 let bricks
 let gameState
-
+let a = 10
+let max = 0
+let min = 480
 function setup() {
   createCanvas(800, 600)
-
   let colors = createColors()
-  gameState = 'playing'
+  gameState = 'starting'
   paddle = new Paddle()
   ball = new Ball(paddle)
 
   bricks = createBricks(colors)
+  handTrack.load(modelParams).then(lmodel => {
+    // detect objects in the image.
+    model = lmodel
+    updateNote.innerText = "Loaded Model!"
+    trackButton.disabled = false
+    gameState = 'playing'
+    toggleVideo()
+});
 }
 
 function createColors() {
@@ -40,15 +49,14 @@ function createBricks(colors) {
   return bricks
 }
 
-function draw() {
-  if(gameState === 'playing') {
+async function draw() {
+  if(gameState === 'playing' && isVideo == true)  {
     background(0)
-
     ball.bounceEdge()
     ball.bouncePaddle()
     
     ball.update()
-
+    // paddle.move(width)
     if (keyIsDown(LEFT_ARROW)) {
       paddle.move('left')
     } else if (keyIsDown(RIGHT_ARROW)) {
@@ -74,12 +82,32 @@ function draw() {
     text(`Score:${playerScore}`, width - 150, 50)
 
     if (ball.belowBottom()) {
-      gameState = 'Lose'
+      // gameState = 'Lose'
+      
     }
 
     if (bricks.length === 0) {
       gameState = 'Win'
     }
+    if(a == 0){
+      runDetection().then(pred =>{
+        if(pred.length > 0){
+          model.renderPredictions(pred, canvas, context, video);
+          paddle.move(pred[0].bbox[0])
+          if(pred[0].bbox[0] > max){
+            max = pred[0].bbox[0];
+            console.log("Max", max);
+          }
+          if(min  > pred[0].bbox[0]){
+            min = pred[0].bbox[0];
+            console.log("Min",min);
+          }
+        }
+      });
+      
+      a=10;
+    }
+    a = a-1;
   } else {
     textSize(100)
     gameState === 'Lose' ? fill(255, 0, 255) : fill(255)
