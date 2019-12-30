@@ -3,25 +3,22 @@ let paddle
 let ball
 let bricks
 let gameState
-let a = 10
-let max = 0
-let min = 480
+let CamFPR = 3
+let a = CamFPR
+let life = 3
 function setup() {
   createCanvas(800, 600)
   let colors = createColors()
   gameState = 'starting'
   paddle = new Paddle()
   ball = new Ball(paddle)
-
   bricks = createBricks(colors)
   handTrack.load(modelParams).then(lmodel => {
-    // detect objects in the image.
     model = lmodel
-    updateNote.innerText = "Loaded Model!"
-    trackButton.disabled = false
+    overlay.style.display = "none";
     gameState = 'playing'
-    toggleVideo()
-});
+    startVideo()
+  });
 }
 
 function createColors() {
@@ -43,26 +40,25 @@ function createBricks(colors) {
   for (let row = 0; row < rows; row++) {
     for (let i = 0; i < bricksPerRow; i++) {
       brick = new Brick(createVector(brickWidth * i, 25 * row), brickWidth, 25, colors[floor(random(0, colors.length))])
-      bricks.push(brick) 
+      bricks.push(brick)
     }
   }
   return bricks
 }
 
 async function draw() {
-  if(gameState === 'playing' && isVideo == true)  {
+  if (gameState === 'playing' && isVideo == true) {
     background(0)
     ball.bounceEdge()
     ball.bouncePaddle()
-    
     ball.update()
-    // paddle.move(width)
+/*	  
     if (keyIsDown(LEFT_ARROW)) {
       paddle.move('left')
     } else if (keyIsDown(RIGHT_ARROW)) {
       paddle.move('right')
     }
-
+*/
     for (let i = bricks.length - 1; i >= 0; i--) {
       const brick = bricks[i]
       if (brick.isColliding(ball)) {
@@ -76,38 +72,32 @@ async function draw() {
 
     paddle.display()
     ball.display()
-
     textSize(32)
-    fill(255)
-    text(`Score:${playerScore}`, width - 150, 50)
+    fill(255,0,0)
+    text(`❤️ =${life } Score:${playerScore} `, width - 250, 50)
 
     if (ball.belowBottom()) {
-      // gameState = 'Lose'
-      
+	    life = life - 1
+	    if(life == 0){
+		gameState = 'Lose'
+	    }
+	    ball.reset()
     }
 
     if (bricks.length === 0) {
       gameState = 'Win'
     }
-    if(a == 0){
-      runDetection().then(pred =>{
-        if(pred.length > 0){
+    if (a == 0) {
+      runDetection().then(pred => {
+        if (pred.length > 0) {
           model.renderPredictions(pred, canvas, context, video);
           paddle.move(pred[0].bbox[0])
-          if(pred[0].bbox[0] > max){
-            max = pred[0].bbox[0];
-            console.log("Max", max);
-          }
-          if(min  > pred[0].bbox[0]){
-            min = pred[0].bbox[0];
-            console.log("Min",min);
-          }
         }
       });
-      
-      a=10;
+
+      a = CamFPR;
     }
-    a = a-1;
+    a = a - 1;
   } else {
     textSize(100)
     gameState === 'Lose' ? fill(255, 0, 255) : fill(255)

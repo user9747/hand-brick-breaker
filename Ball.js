@@ -7,7 +7,9 @@ class Ball {
     this.velocity = createVector(5, -5)
     this.paddle = paddle
   }
-
+  reset() {
+	 this.location = createVector(paddle.location.x + (paddle.width / 2), (paddle.location.y - this.radius - 5))
+  }
   bouncePaddle() {
     // We are within the width of the paddle
     if (this.location.x + this.radius >= this.paddle.location.x &&
