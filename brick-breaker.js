@@ -6,6 +6,14 @@ let gameState
 let CamFPR = 3
 let a = CamFPR
 let life = 3
+
+function preload(){
+  sound1 = loadSound('sound/Arkanoid SFX (1).wav');
+  sound2 = loadSound('sound/Arkanoid SFX (7).wav');
+  sound3 = loadSound('sound/Arkanoid SFX (10).wav');
+  sound4 = loadSound('sound/Arkanoid SFX (11).wav');
+  sound5 = loadSound('sound/over.mp3');
+}
 function setup() {
   createCanvas(800, 600)
   let colors = createColors()
@@ -43,6 +51,7 @@ function createBricks(colors) {
       bricks.push(brick)
     }
   }
+
   return bricks
 }
 
@@ -65,6 +74,7 @@ async function draw() {
         ball.reverse('y')
         bricks.splice(i, 1)
         playerScore += brick.points
+	sound1.play()
       } else {
         brick.display()
       }
@@ -79,6 +89,7 @@ async function draw() {
     if (ball.belowBottom()) {
 	    life = life - 1
 	    if(life == 0){
+		sound5.play()
 		gameState = 'Lose'
 	    }
 	    ball.reset()

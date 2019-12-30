@@ -8,6 +8,7 @@ class Ball {
     this.paddle = paddle
   }
   reset() {
+	  sound3.play()
 	 this.location = createVector(paddle.location.x + (paddle.width / 2), (paddle.location.y - this.radius - 5))
   }
   bouncePaddle() {
@@ -17,17 +18,21 @@ class Ball {
           if (this.location.y + this.radius > this.paddle.location.y) {
             this.reverse('y');
             this.location.y = this.paddle.location.y - this.radius - 1;
+	    sound2.play();
           }
         }
   }
 
   bounceEdge() {
     if (this.location.x + this.radius >= width) { // Check right edge
-      this.reverse('x')
+            this.reverse('x')
+	    sound2.play()
     } else if(this.location.x - this.radius <= 0) { // Check left edge
-      this.reverse('x')
+            this.reverse('x')
+	    sound2.play()
     } else if(this.location.y - this.radius <= 0) { // Check the top
-      this.reverse('y')
+      	    this.reverse('y')
+	    sound2.play()
     }
   }
 
@@ -44,7 +49,7 @@ class Ball {
     this.velocity[coord] *= -1
   }
 
-  belowBottom() {
+  belowBottom() { 
     return this.location.y - this.radius > height
   }
 }
