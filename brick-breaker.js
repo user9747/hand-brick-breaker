@@ -3,7 +3,7 @@ let paddle
 let ball
 let bricks
 let gameState
-let CamFPR = 3
+let CamFPR = 0
 let a = CamFPR
 let life = 3
 
@@ -107,8 +107,9 @@ async function draw() {
       });
 
       a = CamFPR;
+    }else{
+	a = a - 1;
     }
-    a = a - 1;
   } else {
     textSize(100)
     gameState === 'Lose' ? fill(255, 0, 255) : fill(255)
